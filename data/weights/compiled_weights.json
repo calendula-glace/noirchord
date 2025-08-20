@@ -1,0 +1,692 @@
+{
+  "version": 1,
+  "builtAt": "2025-08-20T09:20:30.902820",
+  "styles": {
+    "J-Pop": {
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "V->I": 7,
+            "IV->V": 7,
+            "vi->IV": 4,
+            "I->I": 3,
+            "i->i": 3,
+            "vi->I": 2,
+            "VI->VII": 2,
+            "VII->i": 2,
+            "i->iv": 2,
+            "iv->V": 2,
+            "V->i": 2,
+            "VI->IV": 2,
+            "I->V": 2,
+            "V->vi": 2,
+            "IVmaj7->iii7": 1,
+            "iii7->vi": 1,
+            "I->IVmaj7": 1,
+            "IVmaj7->V": 1,
+            "vi(add9)->IV": 1,
+            "I->vi": 1,
+            "IV->III#7": 1,
+            "III#7->vi": 1,
+            "I->IV": 1,
+            "i->VI": 1,
+            "I->VI": 1,
+            "V->iii": 1,
+            "iii->vi": 1,
+            "IV->I": 1
+          },
+          "barPriors": {
+            "1": 8,
+            "2": 8,
+            "3": 8,
+            "4": 8,
+            "5": 8,
+            "6": 8,
+            "7": 8,
+            "8": 8
+          },
+          "tagFreq": {
+            "borrowed": 12,
+            "maj7": 2,
+            "add9": 1
+          }
+        }
+      },
+      "A": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "vi->iii": 2,
+            "iii->IV": 2,
+            "IV->III#": 2,
+            "ii7->V7": 2,
+            "V7->Imaj7": 1,
+            "Imaj7->Imaj7": 1,
+            "Imaj7->ii7": 1,
+            "V7->Imaj7(add9)": 1,
+            "Imaj7(add9)->IVmaj7": 1,
+            "I->III7": 1,
+            "III7->vi7": 1,
+            "vi7->I7": 1,
+            "I7->IV": 1,
+            "IV->V": 1,
+            "V->I": 1,
+            "I->I": 1
+          },
+          "barPriors": {
+            "1": 4,
+            "2": 4,
+            "3": 4,
+            "4": 4,
+            "5": 2,
+            "6": 2,
+            "7": 2,
+            "8": 2
+          },
+          "tagFreq": {
+            "maj7": 4,
+            "borrowed": 3,
+            "add9": 1
+          }
+        }
+      },
+      "B": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "bVI->bVII": 1,
+            "v->IV": 1,
+            "IV->V/iii": 1,
+            "V/iii->vi": 1
+          },
+          "barPriors": {
+            "1": 2,
+            "2": 2,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "borrowed": 5,
+            "secondary": 1
+          }
+        }
+      },
+      "Pre-Ch": {
+        "4": {
+          "phraseLen": 4,
+          "ngrams": {
+            "i->VII": 1,
+            "VII->VImaj7": 1,
+            "VImaj7->VImaj7": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "maj7": 2
+          }
+        }
+      }
+    },
+    "Anison(cute)": {
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "V->I": 4,
+            "IV->V": 4,
+            "I->I": 2,
+            "vi->IV": 2,
+            "IVmaj7->iii7": 1,
+            "iii7->vi": 1,
+            "vi->I": 1,
+            "I->IVmaj7": 1,
+            "IVmaj7->V": 1,
+            "vi(add9)->IV": 1,
+            "I->vi": 1,
+            "V->iii": 1,
+            "iii->vi": 1
+          },
+          "barPriors": {
+            "1": 3,
+            "2": 3,
+            "3": 3,
+            "4": 3,
+            "5": 3,
+            "6": 3,
+            "7": 3,
+            "8": 3
+          },
+          "tagFreq": {
+            "borrowed": 4,
+            "maj7": 2,
+            "add9": 1
+          }
+        }
+      }
+    },
+    "Idol": {
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "V->I": 3,
+            "I->I": 2,
+            "IV->V": 2,
+            "IVmaj7->iii7": 1,
+            "iii7->vi": 1,
+            "vi->I": 1,
+            "I->IVmaj7": 1,
+            "IVmaj7->V": 1,
+            "V->iii": 1,
+            "iii->vi": 1,
+            "vi->IV": 1,
+            "I->V/II": 1,
+            "V/II->II": 1,
+            "II->V/V": 1,
+            "V/V->V": 1,
+            "I->(mod up)": 1,
+            "(mod up)->I": 1
+          },
+          "barPriors": {
+            "1": 3,
+            "2": 3,
+            "3": 3,
+            "4": 3,
+            "5": 3,
+            "6": 3,
+            "7": 3,
+            "8": 3
+          },
+          "tagFreq": {
+            "maj7": 2,
+            "borrowed": 2,
+            "secondary": 2
+          }
+        }
+      },
+      "A": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "I->III7": 1,
+            "III7->vi7": 1,
+            "vi7->I7": 1,
+            "I7->IV": 1,
+            "IV->V": 1,
+            "V->I": 1,
+            "I->I": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1
+          },
+          "tagFreq": {
+            "borrowed": 1
+          }
+        }
+      }
+    },
+    "Anison(cool)": {
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "IV->V": 3,
+            "V->I": 3,
+            "i->i": 3,
+            "VI->VII": 2,
+            "VII->i": 2,
+            "i->iv": 2,
+            "iv->V": 2,
+            "V->i": 2,
+            "VI->IV": 2,
+            "IV->III#7": 1,
+            "III#7->vi": 1,
+            "vi->I": 1,
+            "I->IV": 1,
+            "I->I": 1,
+            "i->VI": 1,
+            "I->VI": 1
+          },
+          "barPriors": {
+            "1": 4,
+            "2": 4,
+            "3": 4,
+            "4": 4,
+            "5": 4,
+            "6": 4,
+            "7": 4,
+            "8": 4
+          },
+          "tagFreq": {
+            "borrowed": 6
+          }
+        }
+      },
+      "A": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "vi->iii": 2,
+            "iii->IV": 2,
+            "IV->III#": 2,
+            "I->III7": 1,
+            "III7->vi7": 1,
+            "vi7->I7": 1,
+            "I7->IV": 1,
+            "IV->V": 1,
+            "V->I": 1,
+            "I->I": 1
+          },
+          "barPriors": {
+            "1": 3,
+            "2": 3,
+            "3": 3,
+            "4": 3,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1
+          },
+          "tagFreq": {
+            "borrowed": 3
+          }
+        }
+      },
+      "B": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "bVI->bVII": 1,
+            "v->IV": 1,
+            "IV->V/iii": 1,
+            "V/iii->vi": 1
+          },
+          "barPriors": {
+            "1": 2,
+            "2": 2,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "borrowed": 5,
+            "secondary": 1
+          }
+        }
+      }
+    },
+    "Rock": {
+      "B": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "bVI->bVII": 1,
+            "v->IV": 1,
+            "IV->V/iii": 1,
+            "V/iii->vi": 1
+          },
+          "barPriors": {
+            "1": 2,
+            "2": 2,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "borrowed": 5,
+            "secondary": 1
+          }
+        }
+      },
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "VI->IV": 2,
+            "IV->V": 2,
+            "V->I": 2,
+            "I->VI": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1
+          },
+          "tagFreq": {
+            "borrowed": 2
+          }
+        },
+        "4": {
+          "phraseLen": 4,
+          "ngrams": {
+            "bVI->bVII": 1,
+            "bVII->I": 1,
+            "I->I": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "borrowed": 4
+          }
+        }
+      },
+      "Pre-Ch": {
+        "4": {
+          "phraseLen": 4,
+          "ngrams": {
+            "i->VII": 1,
+            "VII->VImaj7": 1,
+            "VImaj7->VImaj7": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "maj7": 2
+          }
+        }
+      }
+    },
+    "EDM": {
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "I->V": 2,
+            "V->vi": 2,
+            "vi->IV": 2,
+            "IV->I": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1
+          },
+          "tagFreq": {
+            "borrowed": 2
+          }
+        }
+      }
+    },
+    "City Pop": {
+      "A": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "ii7->V7": 4,
+            "V7->Imaj7": 2,
+            "Imaj7->vi7": 2,
+            "vi7->ii7": 2,
+            "Imaj7->Imaj7": 1,
+            "Imaj7->ii7": 1,
+            "V7->Imaj7(add9)": 1,
+            "Imaj7(add9)->IVmaj7": 1
+          },
+          "barPriors": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 2,
+            "5": 2,
+            "6": 2,
+            "7": 2,
+            "8": 2
+          },
+          "tagFreq": {
+            "maj7": 6,
+            "add9": 1
+          }
+        }
+      }
+    },
+    "Hard Rock": {
+      "Ch": {
+        "4": {
+          "phraseLen": 4,
+          "ngrams": {
+            "bVI->bVII": 1,
+            "bVII->I": 1,
+            "I->I": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "borrowed": 4
+          }
+        }
+      }
+    },
+    "Metal": {
+      "Ch": {
+        "4": {
+          "phraseLen": 4,
+          "ngrams": {
+            "bVI->bVII": 1,
+            "bVII->I": 1,
+            "I->I": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1
+          },
+          "tagFreq": {
+            "borrowed": 4
+          }
+        }
+      }
+    },
+    "Denpa": {
+      "Ch": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "I->V/II": 1,
+            "V/II->II": 1,
+            "II->V/V": 1,
+            "V/V->V": 1,
+            "V->I": 1,
+            "I->(mod up)": 1,
+            "(mod up)->I": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1
+          },
+          "tagFreq": {
+            "secondary": 2
+          }
+        }
+      }
+    },
+    "Lo-fi": {
+      "A": {
+        "8": {
+          "phraseLen": 8,
+          "ngrams": {
+            "Imaj7->vi7": 2,
+            "vi7->ii7": 2,
+            "ii7->V7": 2,
+            "V7->Imaj7": 1
+          },
+          "barPriors": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1
+          },
+          "tagFreq": {
+            "maj7": 2
+          }
+        }
+      }
+    }
+  },
+  "priors": {
+    "J-Pop": {
+      "cadenceBias": {
+        "bar8": {
+          "V->I": 2.0
+        },
+        "bar7": {
+          "ii->V": 1.2
+        }
+      },
+      "qualityBias": {
+        "add9": 0.4,
+        "maj7": 0.3
+      }
+    },
+    "Anison(cute)": {
+      "cadenceBias": {
+        "bar8": {
+          "V->I": 2.5
+        },
+        "bar7": {
+          "ii->V": 1.4
+        }
+      },
+      "secondaryBias": {
+        "V/IV": 0.8
+      },
+      "qualityBias": {
+        "add9": 0.6,
+        "sus4": 0.3
+      }
+    },
+    "Anison(cool)": {
+      "cadenceBias": {
+        "bar8": {
+          "V->I": 2.2
+        },
+        "bar7": {
+          "ii->V": 1.4
+        }
+      },
+      "secondaryBias": {
+        "V/ii": 0.7,
+        "V/vi": 0.6
+      },
+      "borrowBias": {
+        "bVI": 0.5,
+        "bVII": 0.3
+      }
+    },
+    "City Pop": {
+      "qualityBias": {
+        "maj7": 0.8,
+        "add9": 0.6
+      },
+      "ngram": {
+        "ii7->V7": 1.0,
+        "V7->Imaj7": 1.2
+      }
+    },
+    "EDM": {
+      "ngram": {
+        "I->V": 0.9,
+        "V->vi": 0.9,
+        "vi->IV": 0.9,
+        "IV->I": 0.9
+      },
+      "cadenceBias": {
+        "bar8": {
+          "V->I": 1.4
+        }
+      }
+    },
+    "Rock": {
+      "borrowBias": {
+        "bVII": 0.8,
+        "bVI": 0.6
+      },
+      "ngram": {
+        "bVII->I": 1.0
+      }
+    },
+    "Metal": {
+      "borrowBias": {
+        "bVI": 0.9,
+        "bVII": 0.8
+      },
+      "ngram": {
+        "bVI->bVII": 1.0,
+        "bVII->i": 1.2
+      }
+    },
+    "Lo-fi": {
+      "qualityBias": {
+        "maj7": 0.9,
+        "m7": 0.6
+      },
+      "ngram": {
+        "ii7->V7": 1.0,
+        "V7->Imaj7": 1.0
+      }
+    },
+    "Idol": {
+      "cadenceBias": {
+        "bar8": {
+          "V->I": 2.2
+        }
+      },
+      "ngram": {
+        "IV->V": 1.0,
+        "V->I": 1.2
+      },
+      "qualityBias": {
+        "add9": 0.5
+      }
+    },
+    "Denpa": {
+      "secondaryBias": {
+        "chain": 1.0
+      },
+      "randomness": {
+        "epsilon": 0.15
+      }
+    }
+  }
+}

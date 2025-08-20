@@ -1,0 +1,90 @@
+{
+  "list": [
+    {
+      "id": "jpop",
+      "label": "J-Pop"
+    },
+    {
+      "id": "citypop",
+      "label": "City Pop"
+    },
+    {
+      "id": "jazz",
+      "label": "Jazz"
+    },
+    {
+      "id": "edm",
+      "label": "EDM"
+    },
+    {
+      "id": "rock",
+      "label": "Rock"
+    },
+    {
+      "id": "lofi",
+      "label": "Lo-fi"
+    },
+    {
+      "id": "blues",
+      "label": "Blues"
+    },
+    {
+      "id": "anison_cool",
+      "label": "アニソン(cool)"
+    },
+    {
+      "id": "anison_cute",
+      "label": "アニソン(cute)"
+    },
+    {
+      "id": "hardrock",
+      "label": "ハードロック"
+    },
+    {
+      "id": "metal",
+      "label": "メタル"
+    },
+    {
+      "id": "denpa",
+      "label": "電波"
+    },
+    {
+      "id": "idol",
+      "label": "アイドル"
+    }
+  ],
+  "defaults": {
+    "selected": [
+      "jpop"
+    ],
+    "mood": "bright",
+    "phraseLen": 8,
+    "surpriseLevel": 1,
+    "tension": {
+      "sus4": {
+        "on": true,
+        "level": "mid"
+      },
+      "aug": {
+        "on": false,
+        "level": "low"
+      },
+      "add9": {
+        "on": true,
+        "level": "mid"
+      },
+      "dim": {
+        "on": false,
+        "level": "low"
+      },
+      "m7b5": {
+        "on": false,
+        "level": "low"
+      },
+      "slash": {
+        "on": true,
+        "level": "mid"
+      }
+    }
+  }
+}

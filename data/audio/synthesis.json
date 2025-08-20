@@ -1,0 +1,41 @@
+{
+  "voice": {
+    "osc1": "sine",
+    "osc2": "saw",
+    "detune_cents": 6
+  },
+  "filter": {
+    "type": "lowpass",
+    "cutoff_hz": 4000,
+    "Q": 0.7
+  },
+  "adsr": {
+    "attack": 0.003,
+    "decay": 0.25,
+    "sustain": 0.0,
+    "release": 0.6,
+    "ramp": "exp"
+  },
+  "antiClick": {
+    "fade_ms": 1
+  },
+  "polyphony": {
+    "maxVoices": 6,
+    "stealOldest": true
+  },
+  "voicing": {
+    "bassOctaves": {
+      "low": 2,
+      "normal": 3,
+      "high": 4
+    },
+    "chordRange": {
+      "min": "C3",
+      "max": "C5"
+    },
+    "omitFifthUnless": {
+      "dim": true,
+      "aug": true
+    }
+  }
+}

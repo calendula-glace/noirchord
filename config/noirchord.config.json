@@ -1,0 +1,18 @@
+{
+  "donation": {
+    "provider": "buymeacoffee",
+    "username": "<your-id>",
+    "enabled": true
+  },
+  "adsense": {
+    "enabled": false,
+    "clientId": "ca-pub-XXXXXXXXXXXXXXX",
+    "slot": "XXXXXXXXX"
+  },
+  "sharing": {
+    "enabled": true
+  },
+  "pwa": {
+    "enabled": true
+  }
+}

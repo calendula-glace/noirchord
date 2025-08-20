@@ -1,5 +1,5 @@
 const CACHE = 'noirchord-static-v1';
-const ASSETS = ['/', '/manifest.webmanifest'];
+const ASSETS = ['./', './manifest.webmanifest'];
 self.addEventListener('install', (e)=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
 });

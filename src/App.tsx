@@ -48,6 +48,9 @@ const DEFAULT: Settings = { key:"C", bpm:120, unit:"1bar", octave:"normal" };
 const T_GROUP:Tension[]=["maj7","7","6","add9","9","b9","#9","11","b11","#11","13","b13","#13"];
 const S_GROUP:Shape[]  =["sus2","sus4","dim","aug","b5"];
 
+const SECTIONS = ["Verse","Pre","Cho","D"] as const;
+const MOODS = ["-","おしゃれ","感動的","淡泊","悲壮","楽しい","怪しい"] as const;
+
 const midiToHz = (m:number)=> 440 * Math.pow(2,(m-69)/12);
 
 /** コード → 周波数配列（bass + 上もの） */
@@ -102,11 +105,15 @@ export default function App(){
   const [settings,setSettings]=useState<Settings>(()=>{ try{const s=localStorage.getItem("noir-fs-settings"); return s?JSON.parse(s):DEFAULT;}catch{return DEFAULT;}});
   const [log,setLog]=useState<LogItem[]>(()=>{ try{const s=localStorage.getItem("noir-fs-log"); return s?reviveLog(JSON.parse(s)):[];}catch{return [];} });
   const [editMode,setEditMode]=useState(false);
-  const [sel,setSel]=useState<number|null>(null);
+  const [sel,setSel]==useState<number|null>(null);
   const [showOn,setShowOn]=useState(false);
 
   const [styles,setStyles]=useState<string[]>(["J-Pop","Anison(cute)"]);
   const [kuse,setKuse]=useState<"none"|"mod"|"aug"|"canon">("none");
+
+  // ★ 新規：セクション＆ムード（ローカルに保持）
+  const [section,setSection]=useState<typeof SECTIONS[number]>(()=> (localStorage.getItem("noir-fs-section") as any) || "Verse");
+  const [mood,setMood]=useState<typeof MOODS[number]>(()=> (localStorage.getItem("noir-fs-mood") as any) || "-");
 
   // === マスコット：イベント駆動の表情切替 ===
   const [mariCtx, setMariCtx] = useState<MariContext>({ event: "idle" });
@@ -119,6 +126,8 @@ export default function App(){
     const serial = log.map(li=>({length:li.length,spec:{root:li.spec.root,minor:li.spec.minor,mods:Array.from(li.spec.mods),bass:li.spec.bass}}));
     localStorage.setItem("noir-fs-log",JSON.stringify(serial));
   },[log]);
+  useEffect(()=>localStorage.setItem("noir-fs-section", section),[section]);
+  useEffect(()=>localStorage.setItem("noir-fs-mood", mood),[mood]);
 
   const dia = useMemo(()=>diatonic(settings.key),[settings.key]);
   const cands:Cand[] = useMemo(()=>predict({ key:settings.key, log, styles, modeId:kuse }),[settings.key,log,styles,kuse]);
@@ -395,6 +404,21 @@ export default function App(){
 
         <div className="panel">
           <div className="title">スタイル</div>
+
+          {/* ★ 追加：セクション＆ムードのプルダウン（このブロックに統合） */}
+          <div className="flex" style={{marginBottom:8}}>
+            <label>セクション：
+              <select className="select" value={section} onChange={e=>setSection(e.target.value as any)}>
+                {SECTIONS.map(s=> <option key={s} value={s}>{s}</option>)}
+              </select>
+            </label>
+            <label>ムード：
+              <select className="select" value={mood} onChange={e=>{ const v=e.target.value as any; setMood(v); mark("mood-changed",{ moodName:v }); }}>
+                {MOODS.map(m=> <option key={m} value={m}>{m}</option>)}
+              </select>
+            </label>
+          </div>
+
           <div className="stylesGrid">
             {STYLE_OPTIONS.map(id=>{
               const checked = styles.includes(id);
@@ -417,7 +441,7 @@ export default function App(){
           {KUSE_OPTIONS.map(k=>(
             <label key={k.id} style={{display:"block",padding:"2px 0"}}>
               <input type="radio" name="kuse" checked={kuse===k.id}
-                onChange={()=>{ setKuse(k.id); mark("mood-changed", { moodName: k.label }); }} /> {k.label}
+                onChange={()=>{ setKuse(k.id); /* ここは mood-changed ではなく style 系に含めない */ }} /> {k.label}
             </label>
           ))}
           <div style={{opacity:.8,marginTop:6}}>説明：{KUSE_OPTIONS.find(x=>x.id===kuse)?.description}</div>

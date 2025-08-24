@@ -1,11 +1,10 @@
 // src/mascot/mari.ts
-// 表情差分の画像URLを document.baseURI で絶対化し、
-// さらに各表情ごとにバージョン文字列 (?v=exp) を付与して確実に再読込させます。
+// BASE_URL対応＋表情ごとキャッシュバスター付与＋スタイル複数読み上げ対応
 
 export type MariExpression = 'normal' | 'smile' | 'idea' | 'sweat' | 'sad';
 export const MARI_NAME = 'マリ';
 
-// 相対→絶対URL
+// 相対→絶対URL（GitHub Pagesの /noirchord/ ベースにも対応）
 function withBase(relative: string): string {
   const fb = (import.meta as any).env?.BASE_URL ?? '/';
   try {
@@ -15,9 +14,8 @@ function withBase(relative: string): string {
   }
 }
 
-// 画像（public/mascot/*.png）に表情別のクエリを付与してキャッシュを分離
+// 画像URL（表情名でキャッシュ分離）
 function img(exp: MariExpression): string {
-  // 例: https://.../noirchord/mascot/smile.png?v=smile
   return `${withBase(`mascot/${exp}.png`)}?v=${exp}`;
 }
 
@@ -32,19 +30,29 @@ export const MARI_IMAGES: Record<MariExpression, string> = {
 export type MariContext = {
   event?:
     | 'idle' | 'picked-key' | 'added-chord' | 'modified-chord'
-    | 'predicted' | 'play' | 'stop' | 'export' | 'share' | 'error'
-    | 'style-changed' | 'mood-changed' | 'onchord-start' | 'onchord-apply'
-    | 'batch-insert' | 'preview' | 'predict-fail';
+    | 'predicted' | 'predict-fail'
+    | 'play' | 'stop' | 'export' | 'share' | 'error'
+    | 'style-changed' | 'mood-changed'
+    | 'onchord-start' | 'onchord-apply'
+    | 'batch-insert';
   sectionLabel?: string;
   lastChordLabel?: string;
   predictedLabel?: string;
-  tags?: string[];
-  styleNames?: string[];
+  tags?: string[];         // 例: ["借用","DM","解決","転調: G"]
+  styleNames?: string[];   // ★ 選択中スタイルの“全部”を入れてね
   moodName?: string;
 };
 
 function pick<T>(arr: readonly T[]): T { return arr[Math.floor(Math.random()*arr.length)]; }
-function any<T>(v?: T|T[]): T|undefined { return Array.isArray(v) ? v[0] : v; }
+
+// スタイル名の読み上げ整形（全部言う）
+function fmtStyles(names?: string[] | string): { quoted: string; slash: string } {
+  const arr = Array.isArray(names) ? names : names ? [names] : [];
+  if (!arr.length) return { quoted: '（未選択）', slash: '-' };
+  const quoted = arr.map(n => `「${n}」`).join(' ');
+  const slash  = arr.join(' / ');
+  return { quoted, slash };
+}
 
 export function pickMariFace(ctx?: MariContext): MariExpression {
   if (!ctx) return 'normal';
@@ -72,25 +80,60 @@ export function pickMariFace(ctx?: MariContext): MariExpression {
 }
 
 const LINES = {
-  idle: ['今日も良い進行つくってこー！', '迷ったら王道進行もアリだよ！', '耳が気持ちいい進行、探そ！', 'ちょっとだけ冒険してみない？', 'カノンも良いけどスパイスもね！'],
-  'picked-key': (key: string) => [`キー「${key}」了解っ！ダイアトニック出すね！`, `「${key}」でいこう！セクションにも合わせていこー！`],
-  'added-chord': (ch: string) => [`「${ch}」入れたよ！次はどうする？`, `ナイス！「${ch}」で流れが生きたね！`, `その「${ch}」、良い表情してる！`],
-  'modified-chord': (from: string, to: string) => [`「${from}」を「${to}」に変えたよ！`, `うんうん、「${to}」の方が今はしっくりかも！`],
+  idle: [
+    '今日も良い進行つくってこー！',
+    '迷ったら王道進行もアリだよ！',
+    '耳が気持ちいい進行、探そ！',
+    'ちょっとだけ冒険してみない？',
+    'カノンも良いけどスパイスもね！',
+  ],
+  pickedKey: (key: string) => [
+    `キー「${key}」了解っ！ダイアトニック出すね！`,
+    `「${key}」でいこう！セクションにも合わせていこー！`,
+  ],
+  addedChord: (ch: string) => [
+    `「${ch}」入れたよ！次はどうする？`,
+    `ナイス！「${ch}」で流れが生きたね！`,
+    `その「${ch}」、良い表情してる！`,
+  ],
+  modifiedChord: (from: string, to: string) => [
+    `「${from}」を「${to}」に変えたよ！`,
+    `うんうん、「${to}」の方が今はしっくりかも！`,
+  ],
   predicted: (from?: string, to?: string, tags?: string[]) => {
     const tagNote = tags?.length ? `（${tags.join('／')}）` : '';
-    return [`「${from ?? '？'}→${to ?? '？'}」はイイ感じ！${tagNote}`, `この流れ、耳馴染みよし！「${from ?? '？'}→${to ?? '？'}」${tagNote}`, `行っちゃお！「${from ?? '？'}→${to ?? '？'}」${tagNote}`];
+    return [
+      `「${from ?? '？'}→${to ?? '？'}」はイイ感じ！${tagNote}`,
+      `この流れ、耳馴染みよし！「${from ?? '？'}→${to ?? '？'}」${tagNote}`,
+      `行っちゃお！「${from ?? '？'}→${to ?? '？'}」${tagNote}`,
+    ];
   },
-  'predict-fail': ['うーん…今はちょっと難しいかも。もう1コード欲しいな！', '今回は保留にしよっか！別アイデアで攻めよ！'],
+  predictFail: [
+    'うーん…今はちょっと難しいかも。もう1コード欲しいな！',
+    '今回は保留にしよっか！別アイデアで攻めよ！',
+  ],
   play: ['いくよー！カウント入るね！', '再生スタート！ノってこ！'],
   stop: ['ストップ！次どうする？', '一旦停止〜。修正いってみよ！'],
   export: ['テキスト出力したよ！コピペOK！', '書き出し完了！DAWに貼っちゃお！'],
   share: ['共有リンクできたよ！見てみて！', 'シェア準備OK！お披露目しよ！'],
   error: ['あわわ…エラー出ちゃった。もう一回試してみよ！', 'うぅ…何か引っかかったみたい。直すね！'],
-  'style-changed': (name: string) => [`スタイル「${name}」に切り替え！テイスト変わるよ！`, `「${name}」モードへ！進行のクセがちょっと変わるね！`],
-  'mood-changed': (name: string) => [`ムード「${name}」了解！空気感を少し寄せるね！`, `「${name}」の雰囲気で提案していくよ！`],
-  'onchord-start': ['オンコード選択モードだよ！ベース変えて雰囲気出そ！', 'ルート差し替えいこ！響きがキュッと締まるよ！'],
-  'onchord-apply': (to: string) => [`オンコード適用！「${to}」に変えたよ！`, `OK！低音だけ「${to}」で彩ったよ！`],
-  'batch-insert': ['一括入力ドン！一気に骨格できちゃった！', 'ズバッと入れたよ！ここから味付けしよ！'],
+
+  // ★ スタイル複数対応
+  styleChanged: (names: string[] | string) => {
+    const { quoted, slash } = fmtStyles(names);
+    return [
+      `スタイル${quoted}に切り替え！テイスト変わるよ！`,
+      `${slash} のテイストでいくよ！進行のクセ、ちょっと変化！`,
+    ];
+  },
+
+  moodChanged: (name: string) => [
+    `ムード「${name}」了解！空気感を少し寄せるね！`,
+    `「${name}」の雰囲気で提案していくよ！`,
+  ],
+  onchordStart: ['オンコード選択モードだよ！ベース変えて雰囲気出そ！', 'ルート差し替えいこ！響きがキュッと締まるよ！'],
+  onchordApply: (to: string) => [`オンコード適用！「${to}」に変えたよ！`, `OK！低音だけ「${to}」で彩ったよ！`],
+  batchInsert: ['一括入力ドン！一気に骨格できちゃった！', 'ズバッと入れたよ！ここから味付けしよ！'],
 } as const;
 
 function pickLine(arrOrFn: any, ...args: any[]): string {
@@ -101,31 +144,31 @@ function pickLine(arrOrFn: any, ...args: any[]): string {
 export function getMariLine(ctx?: MariContext): string {
   if (!ctx?.event) return pickLine(LINES.idle);
   switch (ctx.event) {
-    case 'picked-key':     return pickLine(LINES['picked-key'], ctx.sectionLabel ?? '');
-    case 'added-chord':    return pickLine(LINES['added-chord'], ctx.lastChordLabel ?? '');
-    case 'modified-chord': return pickLine(LINES['modified-chord'], ctx.lastChordLabel ?? '？', ctx.predictedLabel ?? '？');
-    case 'predicted':      return pickLine(LINES['predicted'], ctx.lastChordLabel, ctx.predictedLabel, ctx.tags);
-    case 'predict-fail':   return pickLine(LINES['predict-fail']);
+    case 'picked-key':     return pickLine(LINES.pickedKey, ctx.sectionLabel ?? '');
+    case 'added-chord':    return pickLine(LINES.addedChord, ctx.lastChordLabel ?? '');
+    case 'modified-chord': return pickLine(LINES.modifiedChord, ctx.lastChordLabel ?? '？', ctx.predictedLabel ?? '？');
+    case 'predicted':      return pickLine(LINES.predicted, ctx.lastChordLabel, ctx.predictedLabel, ctx.tags);
+    case 'predict-fail':   return pickLine(LINES.predictFail);
     case 'play':           return pickLine(LINES.play);
     case 'stop':           return pickLine(LINES.stop);
     case 'export':         return pickLine(LINES.export);
     case 'share':          return pickLine(LINES.share);
     case 'error':          return pickLine(LINES.error);
-    case 'style-changed':  return pickLine(LINES['style-changed'], any(ctx?.styleNames) ?? 'スタイル');
-    case 'mood-changed':   return pickLine(LINES['mood-changed'], ctx?.moodName ?? 'ムード');
-    case 'onchord-start':  return pickLine(LINES['onchord-start']);
-    case 'onchord-apply':  return pickLine(LINES['onchord-apply'], ctx?.predictedLabel ?? 'ベース');
-    case 'batch-insert':   return pickLine(LINES['batch-insert']);
+    case 'style-changed':  return pickLine(LINES.styleChanged, ctx.styleNames ?? []);
+    case 'mood-changed':   return pickLine(LINES.moodChanged, ctx.moodName ?? 'ムード');
+    case 'onchord-start':  return pickLine(LINES.onchordStart);
+    case 'onchord-apply':  return pickLine(LINES.onchordApply, ctx.predictedLabel ?? 'ベース');
+    case 'batch-insert':   return pickLine(LINES.batchInsert);
     default:               return pickLine(LINES.idle);
   }
 }
 
 export type MascotPayload = {
   name: string;
-  image: string;  // 互換: src/img と同じ
+  image: string;  // 互換フィールド
   src: string;
   img: string;
-  line: string;   // 互換: text と同じ
+  line: string;   // 互換フィールド
   text: string;
   expression: MariExpression;
 };
@@ -145,4 +188,5 @@ export const MARI = {
   say: getMariLine,
   get: getMascot,
 };
+
 export default MARI;

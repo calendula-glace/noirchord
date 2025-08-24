@@ -1,32 +1,52 @@
 // src/mascot/mari.ts
-// NoirChord マスコット「マリ」ユーティリティ（Pages対応の画像パス＆発話）
-// App 側の期待ズレを吸収するため、image/src, line/text を両方提供します。
+// NoirChord マスコット「マリ」ユーティリティ
+// 画像パスは document.baseURI を用いて /noirchord/ 配下でも確実に解決します。
+// App.tsx が参照する getMascot() もエクスポートしています。
 
 export type MariExpression = 'normal' | 'smile' | 'idea' | 'sweat' | 'sad';
+
 export const MARI_NAME = 'マリ';
 
-// Vite: ローカル = "/", Pages = "/noirchord/"
-const BASE: string = (import.meta as any).env?.BASE_URL ?? '/';
+// 相対パスを baseURI から絶対URLに変換（<base href="%BASE_URL%"> を利用）
+function withBase(relative: string): string {
+  // document.baseURI が存在しないケースはほぼ無いが、念のため import.meta.env.BASE_URL で補完
+  const fallbackBase = (import.meta as any).env?.BASE_URL ?? '/';
+  try {
+    return new URL(relative, (typeof document !== 'undefined' && document.baseURI) || fallbackBase).toString();
+  } catch {
+    return `${fallbackBase}${relative.replace(/^\/+/, '')}`;
+  }
+}
 
-// 画像は public/mascot/*.png に配置
+// 画像の実体は public/mascot/*.png に配置
 export const MARI_IMAGES: Record<MariExpression, string> = {
-  normal: `${BASE}mascot/normal.png`,
-  smile:  `${BASE}mascot/smile.png`,
-  idea:   `${BASE}mascot/idea.png`,
-  sweat:  `${BASE}mascot/sweat.png`,
-  sad:    `${BASE}mascot/sad.png`,
+  normal: withBase('mascot/normal.png'),
+  smile:  withBase('mascot/smile.png'),
+  idea:   withBase('mascot/idea.png'),
+  sweat:  withBase('mascot/sweat.png'),
+  sad:    withBase('mascot/sad.png'),
 };
 
+// 呼び出し側から渡せる文脈
 export type MariContext = {
   event?:
-    | 'idle' | 'picked-key' | 'added-chord' | 'modified-chord'
-    | 'predicted' | 'play' | 'stop' | 'export' | 'share' | 'error';
-  sectionLabel?: string;
-  lastChordLabel?: string;
-  predictedLabel?: string;
-  tags?: string[];
+    | 'idle'
+    | 'picked-key'
+    | 'added-chord'
+    | 'modified-chord'
+    | 'predicted'
+    | 'play'
+    | 'stop'
+    | 'export'
+    | 'share'
+    | 'error';
+  sectionLabel?: string;    // Verse / Pre / Cho / D など（任意）
+  lastChordLabel?: string;  // 直前コードの表示用（任意）
+  predictedLabel?: string;  // 予測コードの表示用（任意）
+  tags?: string[];          // ["借用","DM","解決","転調: G"] 等（任意）
 };
 
+// 表情の決定
 export function pickMariFace(ctx?: MariContext): MariExpression {
   if (!ctx) return 'normal';
   switch (ctx.event) {
@@ -43,6 +63,7 @@ export function pickMariFace(ctx?: MariContext): MariExpression {
   }
 }
 
+// 元気なですます調のセリフ
 const LINES = {
   idle: ['今日も良い進行つくってこー！', '迷ったら王道進行もアリだよ！'],
   'picked-key': (key: string) => [`キー「${key}」了解っ！ダイアトニック出すね！`],
@@ -77,6 +98,7 @@ export function getMariLine(ctx?: MariContext): string {
   }
 }
 
+// App.tsx が参照する getMascot を提供（image/src, line/text の互換も確保）
 export type MascotPayload = {
   name: string;
   image: string;      // 画像URL（互換: src と同じ）
@@ -86,7 +108,6 @@ export type MascotPayload = {
   expression: MariExpression;
 };
 
-// App 側から呼ばれる想定のエントリポイント
 export function getMascot(ctx?: MariContext): MascotPayload {
   const expression = pickMariFace(ctx);
   const image = MARI_IMAGES[expression];
@@ -101,7 +122,7 @@ export function getMascot(ctx?: MariContext): MascotPayload {
   };
 }
 
-// 既存互換の default export
+// 既存互換の default export も残す
 export const MARI = {
   name: MARI_NAME,
   images: MARI_IMAGES,
@@ -110,4 +131,5 @@ export const MARI = {
   say: getMariLine,
   get: getMascot,
 };
+
 export default MARI;

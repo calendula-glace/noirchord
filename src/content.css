@@ -1,0 +1,29 @@
+/* 追加の微調整（App.tsx 内のインラインCSSと併用） */
+.mascot {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 14px;
+}
+.mascot img {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.mascot .bubble {
+  min-height: 108px;            /* ← 画像と同じ高さ */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #0f1828;
+  border: 1px solid #24324b;
+  border-radius: 10px;
+  padding: 10px 12px;
+  max-width: 680px;
+}
+.mascot .name {
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 4px;
+}

@@ -1,52 +1,53 @@
 <!doctype html>
 <html lang="ja">
-  <meta charset="utf-8" />
-  <title>NoirChord | Service Worker Reset</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-         background:#0f1115;color:#e8eefb;display:grid;place-items:center;min-height:100dvh;margin:0}
-    .card{max-width:720px;padding:28px;border:1px solid #263043;border-radius:14px;background:#121520;box-shadow:0 8px 30px #0006}
-    h1{font-size:20px;margin:0 0 12px}
-    p{opacity:.86;line-height:1.8;margin:.3rem 0}
-    code{background:#1a2130;border-radius:8px;padding:.2rem .45rem}
-    .ok{color:#7ee787}
-    .warn{color:#ffcc66}
-    .btn{margin-top:14px;padding:10px 14px;border:1px solid #2b3a4b;border-radius:10px;background:#1a2433;color:#e8eefb;cursor:pointer}
-  </style>
-  <body>
-    <div class="card">
-      <h1>Service Worker / Cache をリセットします</h1>
-      <p>古いキャッシュが表示される場合に使います。完了後 <code>/noirchord/</code> へ戻ります。</p>
-      <p id="log" class="warn">実行中...</p>
-      <button class="btn" onclick="location.reload()">手動で再読み込み</button>
-    </div>
-    <script>
-      (async () => {
-        const log = (t, cls) => { const el=document.getElementById('log'); el.textContent=t; el.className=cls||''; };
-        try {
-          // SW unregister
-          if ('serviceWorker' in navigator) {
-            const regs = await navigator.serviceWorker.getRegistrations();
-            await Promise.all(regs.map(r => r.unregister()));
-          }
-          // Caches clear
-          if (window.caches) {
-            const keys = await caches.keys();
-            await Promise.all(keys.map(k => caches.delete(k)));
-          }
-          // Storage clear
-          try { localStorage.clear(); sessionStorage.clear(); } catch {}
-          log('リセット完了。3秒後にアプリへ戻ります。', 'ok');
-          setTimeout(() => {
-            const base = '/noirchord/';
-            location.replace(base);
-          }, 3000);
-        } catch (e) {
-          console.error(e);
-          log('失敗しました。DevTools でエラーをご確認ください。', 'warn');
-        }
-      })();
-    </script>
-  </body>
+<meta charset="utf-8" />
+<title>NoirChord: kill old Service Workers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;background:#111;color:#eee;padding:24px}
+  .card{max-width:780px;margin:auto;border:1px solid #333;border-radius:12px;padding:20px;background:#151515}
+  h1{font-size:1.3rem;margin:0 0 8px}
+  button{padding:10px 16px;border-radius:8px;border:1px solid #444;background:#222;color:#eee;cursor:pointer}
+  pre{white-space:pre-wrap;background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:12px}
+</style>
+<div class="card">
+  <h1>Kill old Service Workers</h1>
+  <p>旧バージョンの Service Worker とキャッシュを削除します。実行後、ページを再読み込みしてください。</p>
+  <button id="run">Unregister & Clear Caches</button>
+  <p id="out"></p>
+  <pre id="log"></pre>
+</div>
+<script>
+const out = document.getElementById('out');
+const log = document.getElementById('log');
+function w(s){ log.textContent += s + '\n'; }
+async function kill() {
+  try {
+    w('Start: unregister service workers...');
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      if (regs.length === 0) w('- No registrations');
+      for (const r of regs) {
+        w('- unregister: ' + (r.scope || '(no scope)'));
+        await r.unregister();
+      }
+    } else {
+      w('serviceWorker is not supported.');
+    }
+    w('Clear caches...');
+    if (window.caches && caches.keys) {
+      const keys = await caches.keys();
+      for (const k of keys) {
+        w('- delete cache: ' + k);
+        await caches.delete(k);
+      }
+    }
+    out.textContent = 'Done. Please hard-reload (Ctrl+F5).';
+  } catch (e) {
+    out.textContent = 'Error: ' + e;
+    w(String(e && e.stack || e));
+  }
+}
+document.getElementById('run').addEventListener('click', kill);
+</script>
 </html>

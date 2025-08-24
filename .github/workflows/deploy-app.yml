@@ -2,10 +2,7 @@ name: Deploy App (Vite → GitHub Pages)
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -14,14 +11,14 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Build (Vite)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -32,26 +29,21 @@ jobs:
       - name: Install deps
         run: npm ci --no-audit --no-fund
 
-      - name: Build
-        run: npm run build
+      - name: Build (base=/noirchord/)
+        run: npm run build:pages
 
-      - name: Upload artifact (dist)
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ./dist
 
   deploy:
-    name: Deploy to Pages
     needs: build
-    # デプロイは main への push のときだけ
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      pages: write
-      id-token: write
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4

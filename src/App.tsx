@@ -423,7 +423,17 @@ export default function App(){
 
       {/* マスコット（画像128pxに、セリフ最小高さ128pxに合わせ済） */}
       <div className="mascot">
-        <img src={mascot.img} alt="マリ" style={{width:128,height:128,objectFit:"cover",borderRadius:12}}/>
+        <img
+            src={(mascot as any).image || (mascot as any).src || (mascot as any).img}
+            alt="マリ"
+            style={{width:128,height:128,objectFit:"cover",borderRadius:12}}
+            onError={(e) => {
+              // 念のためフォールバック（URL確認にも使えます）
+              console.warn('Mascot image failed:', (e.target as HTMLImageElement).src);
+              (e.target as HTMLImageElement).src = `${import.meta.env.BASE_URL}mascot/normal.png`;
+            }}
+        />
+
         <div className="bubble">
           <div className="name">マリ</div>
           <div>{mascot.text}</div>

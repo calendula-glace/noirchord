@@ -1,20 +1,52 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Kill SW</title>
-<body style="font:14px/1.6 system-ui;padding:24px;color:#ddd;background:#111">
-<h1>Clearing Service Worker…</h1>
-<pre id="log"></pre>
-<script>
-(async () => {
-  const log = (m) => (document.getElementById('log').textContent += m + '\n');
-  try {
-    const regs = await navigator.serviceWorker.getRegistrations();
-    for (const r of regs) { await r.unregister(); log('unregistered: ' + (r.scope || '')); }
-    const keys = await caches.keys();
-    await Promise.all(keys.map(k => caches.delete(k)));
-    log('caches cleared');
-    location.replace('./'); // /noirchord/ 直下配置を想定
-  } catch (e) { log('Error: ' + (e && e.message || e)); }
-})();
-</script>
-</body>
+<html lang="ja">
+  <meta charset="utf-8" />
+  <title>NoirChord | Service Worker Reset</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+         background:#0f1115;color:#e8eefb;display:grid;place-items:center;min-height:100dvh;margin:0}
+    .card{max-width:720px;padding:28px;border:1px solid #263043;border-radius:14px;background:#121520;box-shadow:0 8px 30px #0006}
+    h1{font-size:20px;margin:0 0 12px}
+    p{opacity:.86;line-height:1.8;margin:.3rem 0}
+    code{background:#1a2130;border-radius:8px;padding:.2rem .45rem}
+    .ok{color:#7ee787}
+    .warn{color:#ffcc66}
+    .btn{margin-top:14px;padding:10px 14px;border:1px solid #2b3a4b;border-radius:10px;background:#1a2433;color:#e8eefb;cursor:pointer}
+  </style>
+  <body>
+    <div class="card">
+      <h1>Service Worker / Cache をリセットします</h1>
+      <p>古いキャッシュが表示される場合に使います。完了後 <code>/noirchord/</code> へ戻ります。</p>
+      <p id="log" class="warn">実行中...</p>
+      <button class="btn" onclick="location.reload()">手動で再読み込み</button>
+    </div>
+    <script>
+      (async () => {
+        const log = (t, cls) => { const el=document.getElementById('log'); el.textContent=t; el.className=cls||''; };
+        try {
+          // SW unregister
+          if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(r => r.unregister()));
+          }
+          // Caches clear
+          if (window.caches) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+          }
+          // Storage clear
+          try { localStorage.clear(); sessionStorage.clear(); } catch {}
+          log('リセット完了。3秒後にアプリへ戻ります。', 'ok');
+          setTimeout(() => {
+            const base = '/noirchord/';
+            location.replace(base);
+          }, 3000);
+        } catch (e) {
+          console.error(e);
+          log('失敗しました。DevTools でエラーをご確認ください。', 'warn');
+        }
+      })();
+    </script>
+  </body>
+</html>

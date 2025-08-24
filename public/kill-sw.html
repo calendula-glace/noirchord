@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Kill SW</title>
+<body style="font:14px/1.6 system-ui;padding:24px;color:#ddd;background:#111">
+<h1>Clearing Service Worker…</h1>
+<pre id="log"></pre>
+<script>
+(async () => {
+  const log = (m) => (document.getElementById('log').textContent += m + '\n');
+  try {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (const r of regs) { await r.unregister(); log('unregistered: ' + (r.scope || '')); }
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+    log('caches cleared');
+    location.replace('./'); // /noirchord/ 直下配置を想定
+  } catch (e) { log('Error: ' + (e && e.message || e)); }
+})();
+</script>
+</body>

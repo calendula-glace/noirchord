@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./content.css";
-
+import { getMascot, type MariContext } from "./mascot/mari";
 import { ChordSpec, LogItem, Settings, Shape, Tension } from "./types";
 import { PC, diatonic, labelOf, noteToIdx, reviveLog, normalizeMods } from "./utils/music";
 import { audio } from "./audio";
 import { STYLE_OPTIONS, KUSE_OPTIONS } from "./config/styles";
-import { getMascot } from "./mascot/mari";
 import { predict } from "./predict/engine";
 
 /* ====== minimal css injection (fail-safe) ====== */
@@ -109,6 +108,12 @@ export default function App(){
   const [styles,setStyles]=useState<string[]>(["J-Pop","Anison(cute)"]);
   const [kuse,setKuse]=useState<"none"|"mod"|"aug"|"canon">("none");
 
+  // === マスコット：イベント駆動の表情切替 ===
+  const [mariCtx, setMariCtx] = useState<MariContext>({ event: "idle" });
+  const mark = (event: MariContext["event"], extra?: Partial<MariContext>) =>
+    setMariCtx(prev => ({ ...prev, ...extra, event }));
+  const mascot = useMemo(() => getMascot(mariCtx), [JSON.stringify(mariCtx)]);
+
   useEffect(()=>localStorage.setItem("noir-fs-settings",JSON.stringify(settings)),[settings]);
   useEffect(()=>{
     const serial = log.map(li=>({length:li.length,spec:{root:li.spec.root,minor:li.spec.minor,mods:Array.from(li.spec.mods),bass:li.spec.bass}}));
@@ -123,32 +128,40 @@ export default function App(){
 
   /* ====== add / replace ====== */
   const addOrReplace = (spec:ChordSpec, silent=false) => {
-    if (editMode && sel!=null) {
-      setLog(prev => { const n=[...prev]; n[sel]={...n[sel],spec:{...spec,mods:new Set(spec.mods)}}; return n; });
+    const wasEdit = (editMode && sel!=null);
+    if (wasEdit) {
+      setLog(prev => { const n=[...prev]; n[sel!] ={...n[sel!],spec:{...spec,mods:new Set(spec.mods)}}; return n; });
       if(!silent) preview(spec);
+      mark("modified-chord", { lastChordLabel: labelOf(spec), predictedLabel: labelOf(spec) });
       return;
     }
     const curAcc = accPos(log);
     if (settings.unit==="1bar" && curAcc===0.5) {
       const a:LogItem = { spec:{...spec,mods:new Set(spec.mods)}, length:"1/2bar" };
       const b:LogItem = { spec:{...spec,mods:new Set(spec.mods)}, length:"1/2bar" };
-      setLog(p=>[...p,a,b]); if(!silent) preview(spec); return;
+      setLog(p=>[...p,a,b]); if(!silent) preview(spec);
+      mark("added-chord", { lastChordLabel: labelOf(spec) });
+      return;
     }
     const li:LogItem = { spec:{...spec,mods:new Set(spec.mods)}, length:settings.unit };
     setLog(p=>[...p,li]); if(!silent) preview(spec);
+    mark("added-chord", { lastChordLabel: labelOf(spec) });
   };
 
   /* ====== transforms（直前のコード変更） ====== */
   const apply = (fn:(s:ChordSpec)=>void) => {
     if (sel==null && !log.length) return;
     const idx = sel ?? (log.length-1);
+    const before = (sel!=null? log[sel].spec : log[log.length-1]?.spec) || dia[0].spec;
     setLog(prev=>{
       const n=[...prev];
       const s={...n[idx].spec,mods:new Set(n[idx].spec.mods)};
       normalizeMods(s); fn(s); n[idx]={...n[idx],spec:s}; return n;
     });
-    const src = (sel!=null? log[sel].spec : log[log.length-1]?.spec) || dia[0].spec;
-    const s2={...src,mods:new Set(src.mods)}; normalizeMods(s2); fn(s2); preview(s2);
+    const s2={...before,mods:new Set(before.mods)}; normalizeMods(s2); fn(s2); preview(s2);
+    try {
+      mark("modified-chord", { lastChordLabel: labelOf(before), predictedLabel: labelOf(s2) });
+    } catch {}
   };
 
   // ★ メジャー/マイナー切替：sus2/sus4/dim/aug の時は無効
@@ -203,17 +216,19 @@ export default function App(){
     try{ await navigator.clipboard.writeText(t); alert("コピーしました"); }
     catch{ const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta);
            ta.select(); document.execCommand("copy"); document.body.removeChild(ta); alert("コピーしました"); }
+    mark("export");
   };
-  const shareLink=()=>{ navigator.clipboard.writeText(location.href); alert("ページのURLをコピーしました"); };
+  const shareLink=()=>{ navigator.clipboard.writeText(location.href); alert("ページのURLをコピーしました"); mark("share"); };
   const shareX=()=>{ const text=`NoirChordでコード進行を作成したよ！\n${textOut()}\n${location.origin}${location.pathname}`;
-                     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,"_blank"); };
+                     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,"_blank");
+                     mark("share"); };
 
   /* ====== transport ====== */
   const playRef=useRef(false);
-  const stop =()=>{ playRef.current=false; audio.stop(); };
+  const stop =()=>{ playRef.current=false; audio.stop(); mark("stop"); };
   const play =async()=>{
     if(!log.length) return;
-    stop(); playRef.current=true;
+    stop(); playRef.current=true; mark("play");
     const beat=60/settings.bpm;
     for(let i=0;i<log.length && playRef.current;i++){
       const li=log[i];
@@ -234,8 +249,6 @@ export default function App(){
     addOrReplace(spec);
     el.value="";
   };
-
-  const mascot = getMascot({ suggestions:cands.length, modeId:kuse });
 
   return (
     <div className="wrap">
@@ -274,7 +287,7 @@ export default function App(){
                 <span
                   key={"c"+i}
                   className={"chip "+(editMode&&sel===i?"sel":"")}
-                  onClick={()=>editMode&&setSel(sel===i?null:i)}
+                  onClick={()=>{ if(editMode){ setSel(sel===i?null:i); } }}
                 >
                   {labelOf(li.spec)}
                 </span>
@@ -292,7 +305,7 @@ export default function App(){
         <span style={{width:6}}/>
         {S_GROUP.map(m=><span key={m} className="pill" onClick={()=>setShape(m)}>{m}</span>)}
         <span style={{width:6}}/>
-        <span className="pill" onClick={()=>setShowOn(v=>!v)}>オンコード</span>
+        <span className="pill" onClick={()=>{ setShowOn(v=>{ const nv=!v; if(nv) mark("onchord-start"); return nv; }); }}>オンコード</span>
         <span className="pill" onClick={toggleMajMin}>メジャー/マイナー切替</span>
         <span className="pill" onClick={resetTriad}>戻す</span>
         <label className="pill" style={{cursor:"pointer"}}>
@@ -301,7 +314,7 @@ export default function App(){
       </div>
       {showOn && (
         <div className="pills">
-          {PC.map(p=><span key={p} className="pill" onClick={()=>apply(s=>{ s.bass=noteToIdx(p); })}>{p}</span>)}
+          {PC.map(p=><span key={p} className="pill" onClick={()=>apply(s=>{ s.bass=noteToIdx(p); mark("onchord-apply",{ predictedLabel:p }); })}>{p}</span>)}
           <span className="pill" onClick={()=>apply(s=>{ s.bass=null; })}>解除</span>
         </div>
       )}
@@ -312,7 +325,7 @@ export default function App(){
           <div className="title">コード選択</div>
           <div className="flex" style={{marginBottom:6}}>
             <label style={{opacity:.85}}>Key：</label>
-            <select className="select" value={settings.key} onChange={e=>setSettings(s=>({...s,key:e.target.value}))}>
+            <select className="select" value={settings.key} onChange={e=>{ const k=e.target.value; setSettings(s=>({...s,key:k})); mark("picked-key",{ sectionLabel:k }); }}>
               {["C","G","F","D","A","E","B","F#","Bb","Eb","Ab","Db"].map(k=><option key={k} value={k}>{k}</option>)}
             </select>
           </div>
@@ -325,7 +338,7 @@ export default function App(){
           </div>
           <div className="flex" style={{marginTop:8}}>
             <input id="custom" className="select" placeholder="カスタム: A / Am / A+ / A- / A+m / A-m"/>
-            <button className="btn" onClick={onCustomAdd}>追加</button>
+            <button className="btn" onClick={()=>{ onCustomAdd(); }}>{`追加`}</button>
           </div>
           <div style={{opacity:.8,fontSize:13,marginTop:6}}>
             例: A+→A#、G-→Gb、E+→F、F-→E、B+→C、C-→B
@@ -352,6 +365,7 @@ export default function App(){
                   const sp= idx>=0? d2[idx].spec : d2[0].spec;
                   addOrReplace(sp,true);
                 });
+                mark("batch-insert");
               }}>{name}</button>
             ))}
           </div>
@@ -373,6 +387,7 @@ export default function App(){
                   const sp= idx>=0? d2[idx].spec : d2[0].spec;
                   addOrReplace(sp,true);
                 });
+                mark("batch-insert");
               }}>{name}</button>
             ))}
           </div>
@@ -387,7 +402,9 @@ export default function App(){
                 <label key={id}>
                   <input type="checkbox" checked={checked}
                     onChange={e=>{
-                      setStyles(prev=> e.target.checked ? [...new Set([...prev,id])] : prev.filter(x=>x!==id));
+                      const next = e.target.checked ? [...new Set([...styles,id])] : styles.filter(x=>x!==id);
+                      setStyles(next);
+                      mark("style-changed", { styleNames: next });
                     }}/> {id}
                 </label>
               );
@@ -400,7 +417,7 @@ export default function App(){
           {KUSE_OPTIONS.map(k=>(
             <label key={k.id} style={{display:"block",padding:"2px 0"}}>
               <input type="radio" name="kuse" checked={kuse===k.id}
-                onChange={()=>setKuse(k.id)} /> {k.label}
+                onChange={()=>{ setKuse(k.id); mark("mood-changed", { moodName: k.label }); }} /> {k.label}
             </label>
           ))}
           <div style={{opacity:.8,marginTop:6}}>説明：{KUSE_OPTIONS.find(x=>x.id===kuse)?.description}</div>
@@ -416,25 +433,31 @@ export default function App(){
             <div className="flex" style={{opacity:.85}}>
               {c.why.map((w,j)=><span key={j} className="pill">{w}</span>)}
             </div>
-            <div style={{marginTop:8}}><button className="btn" onClick={()=>addOrReplace(c.spec)}>挿入</button></div>
+            <div style={{marginTop:8}}>
+              <button className="btn" onClick={()=>{
+                addOrReplace(c.spec);
+                mark("predicted", {
+                  lastChordLabel: log.length ? labelOf(log[log.length - 1].spec) : "",
+                  predictedLabel: labelOf(c.spec),
+                  tags: c.why,
+                });
+              }}>挿入</button>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* マスコット（画像128pxに、セリフ最小高さ128pxに合わせ済） */}
+      {/* マスコット */}
       <div className="mascot">
         <img
-            key={mascot.expression} // ← 表情が変わるたびに img 要素を作り直して確実に再描画
+            key={mascot.expression}
             src={(mascot as any).image || (mascot as any).src || (mascot as any).img}
             alt="マリ"
             style={{ width: 128, height: 128, objectFit: "cover", borderRadius: 12 }}
             onError={(e) => {
-                // フォールバックで常に同じ画像になるのを避けるため、ログだけ出す
                 console.warn("Mascot image failed:", (e.target as HTMLImageElement).src);
             }}
         />
-
-
         <div className="bubble">
           <div className="name">マリ</div>
           <div>{mascot.text}</div>

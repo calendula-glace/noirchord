@@ -424,15 +424,16 @@ export default function App(){
       {/* マスコット（画像128pxに、セリフ最小高さ128pxに合わせ済） */}
       <div className="mascot">
         <img
+            key={mascot.expression} // ← 表情が変わるたびに img 要素を作り直して確実に再描画
             src={(mascot as any).image || (mascot as any).src || (mascot as any).img}
             alt="マリ"
-            style={{width:128,height:128,objectFit:"cover",borderRadius:12}}
+            style={{ width: 128, height: 128, objectFit: "cover", borderRadius: 12 }}
             onError={(e) => {
-              // 念のためフォールバック（URL確認にも使えます）
-              console.warn('Mascot image failed:', (e.target as HTMLImageElement).src);
-              (e.target as HTMLImageElement).src = `${import.meta.env.BASE_URL}mascot/normal.png`;
+                // フォールバックで常に同じ画像になるのを避けるため、ログだけ出す
+                console.warn("Mascot image failed:", (e.target as HTMLImageElement).src);
             }}
         />
+
 
         <div className="bubble">
           <div className="name">マリ</div>

@@ -3,6 +3,7 @@ name: Deploy App (Vite → GitHub Pages)
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,10 +16,14 @@ concurrency:
 
 jobs:
   build:
+    name: Build (Vite)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Print repo tree (top)
+        run: ls -la && echo && ls -la public || true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -26,11 +31,35 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install deps
+      - name: Show Node & NPM
+        run: |
+          node -v
+          npm -v
+
+      - name: Show package.json (first lines)
+        run: sed -n '1,120p' package.json
+
+      - name: Install deps (ci)
         run: npm ci --no-audit --no-fund
 
-      - name: Build (base=/noirchord/)
+      - name: Build for Pages (base=/noirchord/)
         run: npm run build:pages
+
+      - name: Print dist tree (after build)
+        run: |
+          echo "--- dist ---"
+          ls -la dist || true
+          echo "--- dist/assets (first 50) ---"
+          ls -la dist/assets | head -n 50 || true
+          echo "--- probe icons & mascot ---"
+          test -f dist/icons/icon-192.png && echo "icon-192 OK" || echo "icon-192 MISSING"
+          test -f dist/icons/icon-512.png && echo "icon-512 OK" || echo "icon-512 MISSING"
+          test -f dist/mascot/normal.png && echo "mascot normal OK" || echo "mascot normal MISSING"
+          # manifest/ index の先頭も確認
+          echo "--- manifest ---"
+          sed -n '1,120p' dist/manifest.json || true
+          echo "--- index.html head ---"
+          sed -n '1,80p' dist/index.html || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -38,12 +67,13 @@ jobs:
           path: ./dist
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

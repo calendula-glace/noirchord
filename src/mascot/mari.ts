@@ -1,8 +1,6 @@
-// src/mascot/mari.ts
 export type MariExpression = 'normal' | 'smile' | 'idea' | 'sweat' | 'sad';
 export const MARI_NAME = 'マリ';
 
-// Vite が /（ローカル）や /noirchord/（Pages）を自動注入
 const BASE = (import.meta as any).env?.BASE_URL ?? '/';
 
 export const MARI_IMAGES: Record<MariExpression, string> = {

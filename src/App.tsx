@@ -105,7 +105,7 @@ export default function App(){
   const [settings,setSettings]=useState<Settings>(()=>{ try{const s=localStorage.getItem("noir-fs-settings"); return s?JSON.parse(s):DEFAULT;}catch{return DEFAULT;}});
   const [log,setLog]=useState<LogItem[]>(()=>{ try{const s=localStorage.getItem("noir-fs-log"); return s?reviveLog(JSON.parse(s)):[];}catch{return [];} });
   const [editMode,setEditMode]=useState(false);
-  const [sel,setSel]==useState<number|null>(null);
+  const [sel,setSel]=useState<number|null>(null);
   const [showOn,setShowOn]=useState(false);
 
   const [styles,setStyles]=useState<string[]>(["J-Pop","Anison(cute)"]);
@@ -441,7 +441,7 @@ export default function App(){
           {KUSE_OPTIONS.map(k=>(
             <label key={k.id} style={{display:"block",padding:"2px 0"}}>
               <input type="radio" name="kuse" checked={kuse===k.id}
-                onChange={()=>{ setKuse(k.id); /* ここは mood-changed ではなく style 系に含めない */ }} /> {k.label}
+                onChange={()=>{ setKuse(k.id); /* moodとは別チャンネル */ }} /> {k.label}
             </label>
           ))}
           <div style={{opacity:.8,marginTop:6}}>説明：{KUSE_OPTIONS.find(x=>x.id===kuse)?.description}</div>

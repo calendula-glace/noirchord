@@ -1,0 +1,1066 @@
+{
+  "meta": {
+    "version": "v1.0.0",
+    "schema": "noir-cadence-1",
+    "generatedAt": "2025-08-25T08:48:50.193433Z",
+    "notes": "Cadence frequency by genre/section at bar4 & bar8. Keys: authentic(正格), plagal(変格), deceptive(偽終止), half(半終止)."
+  },
+  "weights": [
+    {
+      "genre": "J-Pop",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "J-Pop",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cute)",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Anison(cool)",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "City Pop",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "EDM",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Rock",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Metal",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Idol",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.25
+      }
+    },
+    {
+      "genre": "Denpa",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.31,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.2
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Lo-fi",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.21,
+        "deceptive": 0.25,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Jazz",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.25,
+        "deceptive": 0.24,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "Verse",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "Verse",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "Pre",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "Pre",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "Cho",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "Cho",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "D",
+      "bar": 4,
+      "cadence": {
+        "authentic": 0.27,
+        "plagal": 0.23,
+        "deceptive": 0.23,
+        "half": 0.27
+      }
+    },
+    {
+      "genre": "Halloween",
+      "section": "D",
+      "bar": 8,
+      "cadence": {
+        "authentic": 0.29,
+        "plagal": 0.27,
+        "deceptive": 0.22,
+        "half": 0.22
+      }
+    }
+  ]
+}

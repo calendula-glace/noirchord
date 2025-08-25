@@ -7,7 +7,6 @@ import { audio } from "./audio";
 import { STYLE_OPTIONS, KUSE_OPTIONS } from "./config/styles";
 import { predict } from "./predict/engine";
 
-/* ====== minimal css injection (fail-safe) ====== */
 const injectCSS = () => {
   if (document.getElementById("noir-failsafe")) return;
   const css = `
@@ -53,16 +52,14 @@ const MOODS = ["-","おしゃれ","感動的","淡泊","悲壮","楽しい","怪
 
 const midiToHz = (m:number)=> 440 * Math.pow(2,(m-69)/12);
 
-/** コード → 周波数配列（bass + 上もの） */
 function freqsFor(spec: ChordSpec, octave: "normal" | "high"): number[] {
-  const base = (octave === "high" ? 60 : 48); // C4 / C3
+  const base = (octave === "high" ? 60 : 48);
   const rootMidi = base + spec.root;
-
   const iv = new Set<number>();
-  // 形状優先
+
   if (spec.mods.has("sus2")) { iv.add(0); iv.add(2); iv.add(7); }
   else if (spec.mods.has("sus4")) { iv.add(0); iv.add(5); iv.add(7); }
-  else if (spec.mods.has("dim")) { iv.add(0); iv.add(3); iv.add(6); iv.add(9); } // 4和音（減七）
+  else if (spec.mods.has("dim")) { iv.add(0); iv.add(3); iv.add(6); iv.add(9); }
   else {
     const third = spec.minor ? 3 : 4;
     let fifth = 7; if (spec.mods.has("b5")) fifth=6; if (spec.mods.has("aug")) fifth=8;
@@ -91,13 +88,12 @@ function freqsFor(spec: ChordSpec, octave: "normal" | "high"): number[] {
   return mids.map(midiToHz);
 }
 
-/** 現在の小節位置（0 または 0.5） */
 const accPos = (log:LogItem[]) => {
   let acc=0; for(const li of log){ acc += li.length==="1bar"?1:0.5; if(acc>=1) acc-=1; }
   return acc;
 };
 
-type Cand = { title:string; spec:ChordSpec; why:string[] };
+type Cand = { title?:string; spec:ChordSpec; why?:string[] };
 
 export default function App(){
   injectCSS();
@@ -111,11 +107,9 @@ export default function App(){
   const [styles,setStyles]=useState<string[]>(["J-Pop","Anison(cute)"]);
   const [kuse,setKuse]=useState<"none"|"mod"|"aug"|"canon">("none");
 
-  // ★ 新規：セクション＆ムード（ローカルに保持）
   const [section,setSection]=useState<typeof SECTIONS[number]>(()=> (localStorage.getItem("noir-fs-section") as any) || "Verse");
   const [mood,setMood]=useState<typeof MOODS[number]>(()=> (localStorage.getItem("noir-fs-mood") as any) || "-");
 
-  // === マスコット：イベント駆動の表情切替 ===
   const [mariCtx, setMariCtx] = useState<MariContext>({ event: "idle" });
   const mark = (event: MariContext["event"], extra?: Partial<MariContext>) =>
     setMariCtx(prev => ({ ...prev, ...extra, event }));
@@ -130,12 +124,31 @@ export default function App(){
   useEffect(()=>localStorage.setItem("noir-fs-mood", mood),[mood]);
 
   const dia = useMemo(()=>diatonic(settings.key),[settings.key]);
-  const cands:Cand[] = useMemo(()=>predict({ key:settings.key, log, styles, modeId:kuse }),[settings.key,log,styles,kuse]);
 
-  /* ====== audio ====== */
+  const cands: Cand[] = useMemo(() => {
+    try {
+      const res: any = predict({
+        key: settings.key,
+        log,
+        styles,
+        modeId: kuse,
+        section,
+        mood,
+      });
+      const arr = Array.isArray(res) ? res : (res?.items ?? []);
+      // 正規化：title/why を必ず持たせる
+      return (Array.isArray(arr) ? arr : []).map((c:any)=> ({
+        title: c.title ?? "おすすめ",
+        spec: c.spec,
+        why: Array.isArray(c.why) ? c.why : [],
+      }));
+    } catch {
+      return [];
+    }
+  }, [settings.key, log, styles, kuse, section, mood]);
+
   const preview = (s: ChordSpec) => { audio.playChord(freqsFor(s, settings.octave), 0.5); };
 
-  /* ====== add / replace ====== */
   const addOrReplace = (spec:ChordSpec, silent=false) => {
     const wasEdit = (editMode && sel!=null);
     if (wasEdit) {
@@ -157,7 +170,6 @@ export default function App(){
     mark("added-chord", { lastChordLabel: labelOf(spec) });
   };
 
-  /* ====== transforms（直前のコード変更） ====== */
   const apply = (fn:(s:ChordSpec)=>void) => {
     if (sel==null && !log.length) return;
     const idx = sel ?? (log.length-1);
@@ -168,19 +180,15 @@ export default function App(){
       normalizeMods(s); fn(s); n[idx]={...n[idx],spec:s}; return n;
     });
     const s2={...before,mods:new Set(before.mods)}; normalizeMods(s2); fn(s2); preview(s2);
-    try {
-      mark("modified-chord", { lastChordLabel: labelOf(before), predictedLabel: labelOf(s2) });
-    } catch {}
+    try { mark("modified-chord", { lastChordLabel: labelOf(before), predictedLabel: labelOf(s2) }); } catch {}
   };
 
-  // ★ メジャー/マイナー切替：sus2/sus4/dim/aug の時は無効
   const toggleMajMin = () =>
     apply(s => {
       if (s.mods.has("sus2") || s.mods.has("sus4") || s.mods.has("dim") || s.mods.has("aug")) return;
       s.minor = !s.minor;
     });
 
-  // ★ テンション付与：dim/aug の時は無効（付けない）
   const setTension = (t: Tension) =>
     apply(s => {
       if (s.mods.has("dim") || s.mods.has("aug")) return;
@@ -189,7 +197,6 @@ export default function App(){
       s.mods.add(t);
     });
 
-  // ★ 和音変形：dim/aug 選択時はテンションを全除去し minor=false に
   const setShape = (m: Shape) =>
     apply(s => {
       ["sus2","sus4","dim","aug","b5"].forEach(x => s.mods.delete(x as any));
@@ -201,7 +208,6 @@ export default function App(){
       }
     });
 
-  // ★ 戻す：基本トライアドへ（dim/aug/b5 の場合もメジャートライアドへ、オンコード解除）
   const resetTriad = () =>
     apply(s => {
       const odd = s.mods.has("dim") || s.mods.has("aug") || s.mods.has("b5");
@@ -210,7 +216,6 @@ export default function App(){
       s.bass = null;
     });
 
-  /* ====== share/x ====== */
   const textOut=()=>{
     let s="",acc=0;
     log.forEach((li,i)=>{
@@ -232,7 +237,6 @@ export default function App(){
                      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,"_blank");
                      mark("share"); };
 
-  /* ====== transport ====== */
   const playRef=useRef(false);
   const stop =()=>{ playRef.current=false; audio.stop(); mark("stop"); };
   const play =async()=>{
@@ -247,7 +251,6 @@ export default function App(){
     }
   };
 
-  /* ====== custom input ====== */
   const onCustomAdd=()=>{
     const el=document.getElementById("custom") as HTMLInputElement;
     const v=(el?.value||"").trim(); if(!v) return;
@@ -261,7 +264,6 @@ export default function App(){
 
   return (
     <div className="wrap">
-      {/* 右上：共有/X */}
       <div className="sharebar">
         <button className="btn" title="共有リンク" onClick={shareLink}>🔗</button>
         <button className="btn" title="Xにポスト" onClick={shareX}>𝕏</button>
@@ -284,7 +286,6 @@ export default function App(){
         <div/>
       </header>
 
-      {/* ログ */}
       <div className="panel">
         <div className="title">ログ</div>
         <div className="log">
@@ -308,13 +309,12 @@ export default function App(){
         </div>
       </div>
 
-      {/* 直前のコード変更 */}
       <div className="pills">
         {T_GROUP.map(t=><span key={t} className="pill" onClick={()=>setTension(t)}>{t}</span>)}
         <span style={{width:6}}/>
         {S_GROUP.map(m=><span key={m} className="pill" onClick={()=>setShape(m)}>{m}</span>)}
         <span style={{width:6}}/>
-        <span className="pill" onClick={()=>{ setShowOn(v=>{ const nv=!v; if(nv) mark("onchord-start"); return nv; }); }}>オンコード</span>
+        <span className="pill" onClick={()=>{ setShowOn(v=>!v); }}>{showOn?"オンコード解除":"オンコード"}</span>
         <span className="pill" onClick={toggleMajMin}>メジャー/マイナー切替</span>
         <span className="pill" onClick={resetTriad}>戻す</span>
         <label className="pill" style={{cursor:"pointer"}}>
@@ -323,18 +323,17 @@ export default function App(){
       </div>
       {showOn && (
         <div className="pills">
-          {PC.map(p=><span key={p} className="pill" onClick={()=>apply(s=>{ s.bass=noteToIdx(p); mark("onchord-apply",{ predictedLabel:p }); })}>{p}</span>)}
+          {PC.map(p=><span key={p} className="pill" onClick={()=>apply(s=>{ s.bass=noteToIdx(p); })}>{p}</span>)}
           <span className="pill" onClick={()=>apply(s=>{ s.bass=null; })}>解除</span>
         </div>
       )}
 
-      {/* 上段 5カラム */}
       <div className="gridTop">
         <div className="panel">
           <div className="title">コード選択</div>
           <div className="flex" style={{marginBottom:6}}>
             <label style={{opacity:.85}}>Key：</label>
-            <select className="select" value={settings.key} onChange={e=>{ const k=e.target.value; setSettings(s=>({...s,key:k})); mark("picked-key",{ sectionLabel:k }); }}>
+            <select className="select" value={settings.key} onChange={e=>{ const k=e.target.value; setSettings(s=>({...s,key:k})); }}>
               {["C","G","F","D","A","E","B","F#","Bb","Eb","Ab","Db"].map(k=><option key={k} value={k}>{k}</option>)}
             </select>
           </div>
@@ -347,7 +346,7 @@ export default function App(){
           </div>
           <div className="flex" style={{marginTop:8}}>
             <input id="custom" className="select" placeholder="カスタム: A / Am / A+ / A- / A+m / A-m"/>
-            <button className="btn" onClick={()=>{ onCustomAdd(); }}>{`追加`}</button>
+            <button className="btn" onClick={()=>{ onCustomAdd(); }}>追加</button>
           </div>
           <div style={{opacity:.8,fontSize:13,marginTop:6}}>
             例: A+→A#、G-→Gb、E+→F、F-→E、B+→C、C-→B
@@ -374,7 +373,6 @@ export default function App(){
                   const sp= idx>=0? d2[idx].spec : d2[0].spec;
                   addOrReplace(sp,true);
                 });
-                mark("batch-insert");
               }}>{name}</button>
             ))}
           </div>
@@ -396,7 +394,6 @@ export default function App(){
                   const sp= idx>=0? d2[idx].spec : d2[0].spec;
                   addOrReplace(sp,true);
                 });
-                mark("batch-insert");
               }}>{name}</button>
             ))}
           </div>
@@ -404,8 +401,6 @@ export default function App(){
 
         <div className="panel">
           <div className="title">スタイル</div>
-
-          {/* ★ 追加：セクション＆ムードのプルダウン（このブロックに統合） */}
           <div className="flex" style={{marginBottom:8}}>
             <label>セクション：
               <select className="select" value={section} onChange={e=>setSection(e.target.value as any)}>
@@ -413,14 +408,13 @@ export default function App(){
               </select>
             </label>
             <label>ムード：
-              <select className="select" value={mood} onChange={e=>{ const v=e.target.value as any; setMood(v); mark("mood-changed",{ moodName:v }); }}>
+              <select className="select" value={mood} onChange={e=>{ const v=e.target.value as any; setMood(v); }}>
                 {MOODS.map(m=> <option key={m} value={m}>{m}</option>)}
               </select>
             </label>
           </div>
-
           <div className="stylesGrid">
-            {STYLE_OPTIONS.map(id=>{
+            {(STYLE_OPTIONS??[]).map(id=>{
               const checked = styles.includes(id);
               return (
                 <label key={id}>
@@ -428,7 +422,6 @@ export default function App(){
                     onChange={e=>{
                       const next = e.target.checked ? [...new Set([...styles,id])] : styles.filter(x=>x!==id);
                       setStyles(next);
-                      mark("style-changed", { styleNames: next });
                     }}/> {id}
                 </label>
               );
@@ -438,53 +431,42 @@ export default function App(){
 
         <div className="panel">
           <div className="title">くせつよモード</div>
-          {KUSE_OPTIONS.map(k=>(
+          {(KUSE_OPTIONS??[]).map(k=>(
             <label key={k.id} style={{display:"block",padding:"2px 0"}}>
               <input type="radio" name="kuse" checked={kuse===k.id}
-                onChange={()=>{ setKuse(k.id); /* moodとは別チャンネル */ }} /> {k.label}
+                onChange={()=>{ setKuse(k.id as any); }} /> {k.label}
             </label>
           ))}
-          <div style={{opacity:.8,marginTop:6}}>説明：{KUSE_OPTIONS.find(x=>x.id===kuse)?.description}</div>
+          <div style={{opacity:.8,marginTop:6}}>説明：{(KUSE_OPTIONS??[]).find(x=>x.id===kuse)?.description}</div>
         </div>
       </div>
 
-      {/* おすすめ */}
       <div className="cards">
-        {cands.map((c,i)=>(
+        {(cands??[]).map((c,i)=>(
           <div className="card" key={i}>
-            <div style={{fontWeight:700,marginBottom:6}}>{c.title}</div>
+            <div style={{fontWeight:700,marginBottom:6}}>{c.title ?? "おすすめ"}</div>
             <div style={{fontSize:18,marginBottom:6}}>{labelOf(c.spec)}</div>
             <div className="flex" style={{opacity:.85}}>
-              {c.why.map((w,j)=><span key={j} className="pill">{w}</span>)}
+              {(c.why ?? []).map((w,j)=><span key={j} className="pill">{w}</span>)}
             </div>
             <div style={{marginTop:8}}>
-              <button className="btn" onClick={()=>{
-                addOrReplace(c.spec);
-                mark("predicted", {
-                  lastChordLabel: log.length ? labelOf(log[log.length - 1].spec) : "",
-                  predictedLabel: labelOf(c.spec),
-                  tags: c.why,
-                });
-              }}>挿入</button>
+              <button className="btn" onClick={()=>{ addOrReplace(c.spec); }}>挿入</button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* マスコット */}
       <div className="mascot">
         <img
-            key={mascot.expression}
-            src={(mascot as any).image || (mascot as any).src || (mascot as any).img}
-            alt="マリ"
-            style={{ width: 128, height: 128, objectFit: "cover", borderRadius: 12 }}
-            onError={(e) => {
-                console.warn("Mascot image failed:", (e.target as HTMLImageElement).src);
-            }}
+          key={(mascot as any).expression}
+          src={(mascot as any).image || (mascot as any).src || (mascot as any).img}
+          alt="マリ"
+          style={{ width: 128, height: 128, objectFit: "cover", borderRadius: 12 }}
+          onError={(e) => { console.warn("Mascot image failed:", (e.target as HTMLImageElement).src); }}
         />
         <div className="bubble">
           <div className="name">マリ</div>
-          <div>{mascot.text}</div>
+          <div>{(mascot as any).text}</div>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+// 開発: base="/"（http://localhost:5173/ でOK）
+// 本番ビルド: base="/noirchord/"（GitHub Pages用）
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/',                 // ← ローカルは '/', Pages のときは '/noirchord/' に変更
-  server: { port: 5173 }     // 任意
-})
+  base: command === 'build' ? '/noirchord/' : '/',
+}))
